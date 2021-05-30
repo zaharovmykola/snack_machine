@@ -19,20 +19,21 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
     }
 
+    //edit current, purchase item
     @PostMapping("/{category}/{date}")
-    public ResponseEntity<ResponseModel> reportByDay (
+    public ResponseEntity<ResponseModel> purchase (
             @PathVariable String category,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         return new ResponseEntity<>(purchaseService.purchase(category, date), HttpStatus.CREATED);
     }
 
-    //edit current, purchase item
-    @PatchMapping(value = "/{id}")
-    public ResponseEntity<ResponseModel> purchase(@PathVariable Long id, @RequestBody CategoryModel category) {
-        category.setId(id);
-        return new ResponseEntity<>(purchaseService.purchase(category), HttpStatus.OK);
-    }
+//    //edit current, purchase item
+//    @PatchMapping(value = "/{id}")
+//    public ResponseEntity<ResponseModel> purchase(@PathVariable Long id, @RequestBody CategoryModel category) {
+//        category.setId(id);
+//        return new ResponseEntity<>(purchaseService.purchase(category), HttpStatus.OK);
+//    }
 
     // report by day sorted by category name
     @GetMapping("/reportbyday/{date}")
