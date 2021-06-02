@@ -20,15 +20,15 @@ public class CategoryService implements ICategoryService {
         this.categoryDao = categoryDao;
     }
 
-    private static CategoryModel categoryEntityToModel(Category category) {
-        return CategoryModel.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .price(category.getPrice())
-                .number(category.getNumber())
-                .available(category.getAvailable())
-                .build();
-    }
+//    private static CategoryModel categoryEntityToModel(Category category) {
+//        return CategoryModel.builder()
+//                .id(category.getId())
+//                .name(category.getName())
+//                .price(category.getPrice())
+//                .number(category.getNumber())
+//                .available(category.getAvailable())
+//                .build();
+//    }
 
     // create new
     public ResponseModel addCategory(CategoryModel categoryModel) {

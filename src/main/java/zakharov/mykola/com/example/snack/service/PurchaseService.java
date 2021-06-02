@@ -6,7 +6,6 @@ import zakharov.mykola.com.example.snack.dao.CategoryHibernateDAO;
 import zakharov.mykola.com.example.snack.dao.PurchaseHibernateDAO;
 import zakharov.mykola.com.example.snack.entity.Category;
 import zakharov.mykola.com.example.snack.entity.Purchase;
-import zakharov.mykola.com.example.snack.model.CategoryModel;
 import zakharov.mykola.com.example.snack.model.ReportItemModel;
 import zakharov.mykola.com.example.snack.model.ReportModel;
 import zakharov.mykola.com.example.snack.model.ResponseModel;
@@ -16,7 +15,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -73,64 +71,64 @@ public class PurchaseService {
         }
     }
 
-    //edit current, purchase item
-    public ResponseModel purchase(CategoryModel categoryModel) {
-        Optional<Category> categoryFromDao = categoryDao.findById(categoryModel.getId());
-        if (categoryFromDao.isEmpty()
-                || (categoryFromDao.get().getNumber() == 0) ) {
-            return ResponseModel.builder()
-                    .status(ResponseModel.FAIL_STATUS)
-                    .message(String.format("Item %s Is Not Purchased", categoryModel.getName()))
-                    .build();
-        }
-        Category category =
-                Category.builder()
-                        .id(categoryModel.getId())
-                        .name(categoryModel.getName())
-                        .price(categoryModel.getPrice())
-                        .number(categoryFromDao.get().getNumber() - 1)
-                        .available(categoryModel.getAvailable())
-                        .build();
-        categoryDao.save(category);
-        Purchase purchase;
-        Purchase purchaseFromDao = purchaseDao.findByDateAndCategory_Name(LocalDate.now(), categoryModel.getName());
-        if (purchaseFromDao.getCategory().getName() == null) {
-            purchase =
-                    Purchase.builder()
-                            .date(LocalDate.now())
-                            .category(
-                                    Category.builder()
-                                            .name(categoryFromDao.get().getName())
-                                            .price(categoryFromDao.get().getPrice())
-                                            .number(1)
-                                            .build()
-                            )
-                            .build();
-        } else {
-            purchase =
-                    Purchase.builder()
-                            .id(purchaseFromDao.getId())
-                            .date(purchaseFromDao.getDate())
-                            .category(
-                                    Category.builder()
-                                            .name(categoryFromDao.get().getName())
-                                            .price(purchaseFromDao.getCategory().getPrice()
-                                                    .add(categoryFromDao.get().getPrice())
-                                            )
-                                            .number(purchaseFromDao.getCategory().getNumber() + 1)
-                                            .build()
-                            )
-                            .build();
-        }
-        purchaseDao.save(purchase);
-        return ResponseModel.builder()
-                .status(ResponseModel.SUCCESS_STATUS)
-                .message(String.format("%s \n %s %.2f",
-                        purchase.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        category.getName(), category.getPrice()))
-                .data(purchase)
-                .build();
-    }
+//    //edit current, purchase item
+//    public ResponseModel purchase(CategoryModel categoryModel) {
+//        Optional<Category> categoryFromDao = categoryDao.findById(categoryModel.getId());
+//        if (categoryFromDao.isEmpty()
+//                || (categoryFromDao.get().getNumber() == 0) ) {
+//            return ResponseModel.builder()
+//                    .status(ResponseModel.FAIL_STATUS)
+//                    .message(String.format("Item %s Is Not Purchased", categoryModel.getName()))
+//                    .build();
+//        }
+//        Category category =
+//                Category.builder()
+//                        .id(categoryModel.getId())
+//                        .name(categoryModel.getName())
+//                        .price(categoryModel.getPrice())
+//                        .number(categoryFromDao.get().getNumber() - 1)
+//                        .available(categoryModel.getAvailable())
+//                        .build();
+//        categoryDao.save(category);
+//        Purchase purchase;
+//        Purchase purchaseFromDao = purchaseDao.findByDateAndCategory_Name(LocalDate.now(), categoryModel.getName());
+//        if (purchaseFromDao.getCategory().getName() == null) {
+//            purchase =
+//                    Purchase.builder()
+//                            .date(LocalDate.now())
+//                            .category(
+//                                    Category.builder()
+//                                            .name(categoryFromDao.get().getName())
+//                                            .price(categoryFromDao.get().getPrice())
+//                                            .number(1)
+//                                            .build()
+//                            )
+//                            .build();
+//        } else {
+//            purchase =
+//                    Purchase.builder()
+//                            .id(purchaseFromDao.getId())
+//                            .date(purchaseFromDao.getDate())
+//                            .category(
+//                                    Category.builder()
+//                                            .name(categoryFromDao.get().getName())
+//                                            .price(purchaseFromDao.getCategory().getPrice()
+//                                                    .add(categoryFromDao.get().getPrice())
+//                                            )
+//                                            .number(purchaseFromDao.getCategory().getNumber() + 1)
+//                                            .build()
+//                            )
+//                            .build();
+//        }
+//        purchaseDao.save(purchase);
+//        return ResponseModel.builder()
+//                .status(ResponseModel.SUCCESS_STATUS)
+//                .message(String.format("%s \n %s %.2f",
+//                        purchase.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+//                        category.getName(), category.getPrice()))
+//                .data(purchase)
+//                .build();
+//    }
 
     // report by day
     public ResponseModel reportByDay(LocalDate date) {
