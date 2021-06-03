@@ -6,7 +6,7 @@ import zakharov.mykola.com.example.snack.model.ResponseModel;
 import java.time.LocalDate;
 
 public interface IPurchaseService {
-    ResponseModel purchase(CategoryModel categoryModel);
+    ResponseModel purchase(String categoryName, LocalDate date);
     ResponseModel reportByDay(LocalDate date);
-    ResponseModel reportByMonth(Short month);
+    ResponseModel reportByMonth(String yearMonth);
 }

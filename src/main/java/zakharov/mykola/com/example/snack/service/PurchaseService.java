@@ -9,6 +9,7 @@ import zakharov.mykola.com.example.snack.entity.Purchase;
 import zakharov.mykola.com.example.snack.model.ReportItemModel;
 import zakharov.mykola.com.example.snack.model.ReportModel;
 import zakharov.mykola.com.example.snack.model.ResponseModel;
+import zakharov.mykola.com.example.snack.service.interfaces.IPurchaseService;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class PurchaseService {
+public class PurchaseService implements IPurchaseService {
 
     @Autowired
     private PurchaseHibernateDAO purchaseDao;
