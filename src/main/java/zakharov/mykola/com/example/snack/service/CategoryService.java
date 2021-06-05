@@ -8,6 +8,7 @@ import zakharov.mykola.com.example.snack.model.ResponseModel;
 import zakharov.mykola.com.example.snack.service.interfaces.ICategoryService;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,20 @@ public class CategoryService implements ICategoryService {
 
     // create new
     public ResponseModel addCategory(CategoryModel categoryModel) {
+        if (categoryModel.getPrice() == null) {
+            return ResponseModel.builder()
+                    .status(ResponseModel.FAIL_STATUS)
+                    .message("Category price is not specified. Please add category with price")
+                    .build();
+        }
+
+        if ( categoryModel.getPrice().compareTo(BigDecimal.ZERO) <= 0 ) {
+            return ResponseModel.builder()
+                    .status(ResponseModel.FAIL_STATUS)
+                    .message(String.format("Category price %.2f is invalid. Please use price > 0", categoryModel.getPrice()))
+                    .build();
+        }
+
         Category category =
                 Category.builder()
                         .name(categoryModel.getName().trim())
@@ -39,6 +54,7 @@ public class CategoryService implements ICategoryService {
                         .number(categoryModel.getNumber() != null ? categoryModel.getNumber() : 0)
                         // .available(categoryModel.getAvailable())
                         .build();
+
         categoryDao.save(category);
         return ResponseModel.builder()
                 .status(ResponseModel.SUCCESS_STATUS)

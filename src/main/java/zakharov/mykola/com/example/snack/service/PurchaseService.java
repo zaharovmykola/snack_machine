@@ -55,7 +55,7 @@ public class PurchaseService implements IPurchaseService {
                         .status(ResponseModel.FAIL_STATUS)
                         .message(
                                 String.format(
-                                        "Category %s out of stock",
+                                        "Category %s is out of stock",
                                         categoryName
                                 )
                         ).build();
@@ -65,7 +65,7 @@ public class PurchaseService implements IPurchaseService {
                     .status(ResponseModel.FAIL_STATUS)
                     .message(
                             String.format(
-                                    "Category %s not found",
+                                    "Category %s is not found",
                                     categoryName
                             )
                     ).build();
