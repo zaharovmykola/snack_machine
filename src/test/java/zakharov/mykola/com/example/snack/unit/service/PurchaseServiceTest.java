@@ -11,10 +11,13 @@ import zakharov.mykola.com.example.snack.dao.CategoryHibernateDAO;
 import zakharov.mykola.com.example.snack.dao.PurchaseHibernateDAO;
 import zakharov.mykola.com.example.snack.entity.Category;
 import zakharov.mykola.com.example.snack.entity.Purchase;
+import zakharov.mykola.com.example.snack.model.ReportItemModel;
 import zakharov.mykola.com.example.snack.model.ResponseModel;
 import zakharov.mykola.com.example.snack.service.PurchaseService;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -80,5 +83,92 @@ public class PurchaseServiceTest {
         assertEquals(ResponseModel.FAIL_STATUS, responseModel.getStatus());
         assertEquals("Category Coca is not found", responseModel.getMessage());
     }
+
+    @Test
+    void shouldMakeReportByDaySuccessfully() {
+        doReturn(returnListOfPurchases())
+                .when(purchaseDAO)
+                .findAllByDateAfterOrderByCategoryAsc(LocalDate.parse("2021-09-27").minusDays(1));
+        ResponseModel responseModel =
+                purchaseService.reportByDay(LocalDate.parse("2021-09-27"));
+        assertNotNull(responseModel);
+        assertEquals(ResponseModel.SUCCESS_STATUS, responseModel.getStatus());
+        assertEquals("Cola 3.20 1\nCracker 7.20 1\nTotal 10.4", responseModel.getMessage());
+    }
+
+    @Test
+    void shouldMakeReportByMonthSuccessfully() {
+        doReturn(returnListOfPurchases())
+                .when(purchaseDAO)
+                .findAllByDate_Month(
+                        Integer.parseInt("2021-09".split("-")[0]),
+                        Integer.parseInt("2021-09".split("-")[1]));
+        ResponseModel responseModel =
+                purchaseService.reportByMonth("2021-09");
+        assertNotNull(responseModel);
+        assertEquals(ResponseModel.SUCCESS_STATUS, responseModel.getStatus());
+        assertEquals("Cola 6.40 2\nCracker 7.20 1\nTotal 13.6", responseModel.getMessage());
+    }
+
+    List<Purchase> returnListOfPurchases () {
+        return Arrays.asList(
+                Purchase.builder()
+                        .id(1L)
+                        .date(LocalDate.parse("2021-09-27"))
+                        .category(
+                                Category.builder()
+                                        .id(1L)
+                                        .name("Cracker")
+                                        .price(BigDecimal.valueOf(7.2))
+                                        .number(1)
+                                        .available(true)
+                                        .build()
+                        )
+                        .build(),
+                Purchase.builder()
+                        .id(2L)
+                        .date(LocalDate.parse("2021-09-27"))
+                        .category(
+                                Category.builder()
+                                        .id(2L)
+                                        .name("Cola")
+                                        .price(BigDecimal.valueOf(3.2))
+                                        .number(1)
+                                        .available(true)
+                                        .build()
+                        )
+                        .build(),
+                Purchase.builder()
+                        .id(3L)
+                        .date(LocalDate.parse("2021-09-28"))
+                        .category(
+                                Category.builder()
+                                        .id(2L)
+                                        .name("Cola")
+                                        .price(BigDecimal.valueOf(3.2))
+                                        .number(1)
+                                        .available(true)
+                                        .build()
+                        )
+                        .build()
+        );
+    }
+
+//    Map<String, ReportItemModel> ResponseModelOfmapOfNamesAndReportItemModels () {
+//        return  Map.of(
+//                        "Cracker",
+//                        ReportItemModel.builder()
+//                                .categoryName("Cracker")
+//                                .totalPrice(BigDecimal.valueOf(7.2))
+//                                .quantity(1)
+//                                .build(),
+//                        "Cola",
+//                        ReportItemModel.builder()
+//                                .categoryName("Cola")
+//                                .totalPrice(BigDecimal.valueOf(6.4))
+//                                .quantity(2)
+//                                .build()
+//                );
+//    }
 
 }
