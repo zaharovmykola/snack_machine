@@ -131,6 +131,8 @@ public class PurchaseService implements IPurchaseService {
 //                .build();
 //    }
 
+
+
     // report by day
     public ResponseModel reportByDay(LocalDate date) {
         List<Purchase> purchases =

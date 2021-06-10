@@ -86,7 +86,7 @@ public class PurchaseServiceTest {
 
     @Test
     void shouldMakeReportByDaySuccessfully() {
-        doReturn(returnListOfPurchases())
+        doReturn(returnListOfPurchasesForDay())
                 .when(purchaseDAO)
                 .findAllByDateAfterOrderByCategoryAsc(LocalDate.parse("2021-09-27").minusDays(1));
         ResponseModel responseModel =
@@ -98,7 +98,7 @@ public class PurchaseServiceTest {
 
     @Test
     void shouldMakeReportByMonthSuccessfully() {
-        doReturn(returnListOfPurchases())
+        doReturn(returnListOfPurchasesForMonth())
                 .when(purchaseDAO)
                 .findAllByDate_Month(
                         Integer.parseInt("2021-09".split("-")[0]),
@@ -110,7 +110,7 @@ public class PurchaseServiceTest {
         assertEquals("Cola 6.40 2\nCracker 7.20 1\nTotal 13.6", responseModel.getMessage());
     }
 
-    List<Purchase> returnListOfPurchases () {
+    List<Purchase> returnListOfPurchasesForMonth () {
         return Arrays.asList(
                 Purchase.builder()
                         .id(1L)
@@ -141,6 +141,37 @@ public class PurchaseServiceTest {
                 Purchase.builder()
                         .id(3L)
                         .date(LocalDate.parse("2021-09-28"))
+                        .category(
+                                Category.builder()
+                                        .id(2L)
+                                        .name("Cola")
+                                        .price(BigDecimal.valueOf(3.2))
+                                        .number(1)
+                                        .available(true)
+                                        .build()
+                        )
+                        .build()
+        );
+    }
+
+    List<Purchase> returnListOfPurchasesForDay () {
+        return Arrays.asList(
+                Purchase.builder()
+                        .id(1L)
+                        .date(LocalDate.parse("2021-09-27"))
+                        .category(
+                                Category.builder()
+                                        .id(1L)
+                                        .name("Cracker")
+                                        .price(BigDecimal.valueOf(7.2))
+                                        .number(1)
+                                        .available(true)
+                                        .build()
+                        )
+                        .build(),
+                Purchase.builder()
+                        .id(2L)
+                        .date(LocalDate.parse("2021-09-27"))
                         .category(
                                 Category.builder()
                                         .id(2L)
